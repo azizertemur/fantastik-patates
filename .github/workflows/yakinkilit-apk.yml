@@ -20,6 +20,10 @@ jobs:
           cat source/part-*.b64 | base64 -d > /tmp/yakinkilit-source.tar.xz
           echo "aaca2324fdcce4d25d5f66f8ae00833ba71dd1977c20c837403fbfc1b73e313c  /tmp/yakinkilit-source.tar.xz" | sha256sum -c -
           tar -xJf /tmp/yakinkilit-source.tar.xz
+      - name: Use supported Kotlin Gradle Plugin
+        run: |
+          sed -i 's/version "2.1.20"/version "2.4.21"/' build.gradle.kts
+          grep 'org.jetbrains.kotlin.android' build.gradle.kts
       - name: JDK 17
         uses: actions/setup-java@v4
         with:
@@ -28,7 +32,6 @@ jobs:
       - name: Android SDK 35 from runner
         shell: bash
         run: |
-          echo "ANDROID_HOME=$ANDROID_HOME"
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --install "platforms;android-35" "build-tools;35.0.0"
       - name: Gradle 8.11.1
         uses: gradle/actions/setup-gradle@v4
